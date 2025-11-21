@@ -19,6 +19,7 @@ body, html {
     align-items: flex-start;
     padding: 10px;
     box-sizing: border-box;
+    flex-wrap: wrap; /* Allow icons to wrap */
 }
 
 /* Icons */
@@ -28,6 +29,7 @@ body, html {
     flex-direction: column;
     align-items: center;
     margin-bottom: 20px;
+    margin-right: 10px; /* spacing for wrap */
     cursor: pointer;
 }
 
@@ -46,6 +48,22 @@ body, html {
 
 .recycle-bin-icon {
     background-image: url('https://win98icons.alexmeub.com/icons/png/recycle_bin_empty-4.png');
+}
+
+.notepad-icon {
+    background-image: url('https://win98icons.alexmeub.com/icons/png/notepad-2.png');
+}
+
+.calc-icon {
+    background-image: url('https://win98icons.alexmeub.com/icons/png/calculator-0.png');
+}
+
+.drive-icon {
+    background-image: url('https://win98icons.alexmeub.com/icons/png/hard_disk_drive-3.png');
+}
+
+.control-panel-icon {
+    background-image: url('https://win98icons.alexmeub.com/icons/png/settings_gear-4.png');
 }
 
 .icon-text {
@@ -281,4 +299,56 @@ body, html {
     border: 1px solid #808080; /* Inset effect */
     margin-top: 2px;
     overflow: auto;
+}
+
+/* Notepad */
+.notepad-area {
+    width: 100%;
+    height: 100%;
+    border: none;
+    resize: none;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+/* Calculator */
+.calc-display {
+    background-color: white;
+    border: 1px solid #808080;
+    text-align: right;
+    padding: 5px;
+    font-family: monospace;
+    font-size: 20px;
+    margin-bottom: 10px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.calc-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+}
+
+.calc-buttons button {
+    width: 35px;
+    height: 30px;
+    font-size: 14px;
+    background-color: #c0c0c0;
+    border-top: 1px solid #ffffff;
+    border-left: 1px solid #ffffff;
+    border-right: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+    cursor: pointer;
+}
+
+.calc-buttons button:active {
+    border-top: 1px solid #000000;
+    border-left: 1px solid #000000;
+    border-right: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+    background-color: #d0d0d0;
 }

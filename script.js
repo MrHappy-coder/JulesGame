@@ -34,7 +34,7 @@ document.addEventListener('click', function(event) {
 let zIndexCounter = 10;
 let windows = {}; // Store window references: id -> {element, taskbarItem}
 
-function openWindow(title) {
+function openWindow(title, appType = 'default') {
     const desktop = document.getElementById('desktop');
     const taskbarItems = document.getElementById('taskbar-items');
     const windowId = 'win-' + Date.now();
@@ -46,6 +46,15 @@ function openWindow(title) {
     win.style.zIndex = ++zIndexCounter;
     win.style.left = '50px';
     win.style.top = '50px';
+
+    // App specific styling/size
+    if (appType === 'notepad') {
+        win.style.width = '400px';
+        win.style.height = '300px';
+    } else if (appType === 'calculator') {
+        win.style.width = '200px';
+        win.style.minHeight = 'auto'; // allow it to shrink
+    }
 
     const titleBar = document.createElement('div');
     titleBar.className = 'window-title-bar';
@@ -69,7 +78,76 @@ function openWindow(title) {
 
     const content = document.createElement('div');
     content.className = 'window-content';
-    content.innerHTML = `<p>Welcome to ${title}!</p><p>This is a simplistic clone.</p>`;
+
+    // Content Generation based on App Type
+    if (appType === 'notepad') {
+        content.innerHTML = `
+            <textarea class="notepad-area"></textarea>
+        `;
+        content.style.padding = '0';
+        content.style.height = '100%';
+        content.style.display = 'flex';
+        content.style.flexDirection = 'column';
+    } else if (appType === 'calculator') {
+        content.innerHTML = `
+            <div class="calc-display" id="calc-display-${windowId}">0</div>
+            <div class="calc-buttons">
+                <button onclick="calcInput('${windowId}', '7')">7</button>
+                <button onclick="calcInput('${windowId}', '8')">8</button>
+                <button onclick="calcInput('${windowId}', '9')">9</button>
+                <button onclick="calcOp('${windowId}', '/')">/</button>
+
+                <button onclick="calcInput('${windowId}', '4')">4</button>
+                <button onclick="calcInput('${windowId}', '5')">5</button>
+                <button onclick="calcInput('${windowId}', '6')">6</button>
+                <button onclick="calcOp('${windowId}', '*')">*</button>
+
+                <button onclick="calcInput('${windowId}', '1')">1</button>
+                <button onclick="calcInput('${windowId}', '2')">2</button>
+                <button onclick="calcInput('${windowId}', '3')">3</button>
+                <button onclick="calcOp('${windowId}', '-')">-</button>
+
+                <button onclick="calcInput('${windowId}', '0')">0</button>
+                <button onclick="calcInput('${windowId}', '.')">.</button>
+                <button onclick="calcResult('${windowId}')">=</button>
+                <button onclick="calcOp('${windowId}', '+')">+</button>
+
+                <button onclick="calcClear('${windowId}')" style="width: 100%; margin-top: 5px;">C</button>
+            </div>
+        `;
+        content.style.overflow = 'hidden';
+    } else if (appType === 'programs') {
+        content.innerHTML = `
+            <div class="icon" ondblclick="openWindow('Notepad', 'notepad')">
+                <div class="icon-img notepad-icon"></div>
+                <div class="icon-text" style="color:black; text-shadow:none;">Notepad</div>
+            </div>
+            <div class="icon" ondblclick="openWindow('Calculator', 'calculator')">
+                <div class="icon-img calc-icon"></div>
+                <div class="icon-text" style="color:black; text-shadow:none;">Calculator</div>
+            </div>
+        `;
+        content.style.display = 'flex';
+        content.style.flexDirection = 'row';
+        content.style.justifyContent = 'flex-start';
+        content.style.alignItems = 'flex-start';
+    } else if (title === 'My Computer') {
+         content.innerHTML = `
+            <div class="icon" ondblclick="alert('Access Denied')">
+                <div class="icon-img drive-icon"></div>
+                <div class="icon-text" style="color:black; text-shadow:none;">(C:)</div>
+            </div>
+            <div class="icon" ondblclick="openWindow('Control Panel', 'default')">
+                <div class="icon-img control-panel-icon"></div>
+                <div class="icon-text" style="color:black; text-shadow:none;">Control Panel</div>
+            </div>
+        `;
+        content.style.display = 'flex';
+        content.style.flexDirection = 'row';
+    } else {
+        content.innerHTML = `<p>Welcome to ${title}!</p><p>This is a simplistic clone.</p>`;
+    }
+
     win.appendChild(content);
 
     desktop.appendChild(win);
@@ -86,7 +164,8 @@ function openWindow(title) {
     // Store reference
     windows[windowId] = {
         element: win,
-        taskbarItem: taskbarItem
+        taskbarItem: taskbarItem,
+        calcState: { current: '', op: null, prev: null } // for calculator
     };
 
     // Drag functionality
@@ -190,4 +269,49 @@ function makeDraggable(element, handle) {
         document.onmouseup = null;
         document.onmousemove = null;
     }
+}
+
+// Calculator Logic
+function calcInput(windowId, val) {
+    const display = document.getElementById(`calc-display-${windowId}`);
+    const state = windows[windowId].calcState;
+    if (state.reset) {
+        state.current = '';
+        state.reset = false;
+    }
+    state.current += val;
+    display.textContent = state.current;
+}
+
+function calcOp(windowId, op) {
+    const state = windows[windowId].calcState;
+    state.prev = parseFloat(state.current);
+    state.current = '';
+    state.op = op;
+}
+
+function calcResult(windowId) {
+    const display = document.getElementById(`calc-display-${windowId}`);
+    const state = windows[windowId].calcState;
+    const current = parseFloat(state.current);
+    let res = 0;
+    if (state.op === '+') res = state.prev + current;
+    if (state.op === '-') res = state.prev - current;
+    if (state.op === '*') res = state.prev * current;
+    if (state.op === '/') res = state.prev / current;
+
+    display.textContent = res;
+    state.current = res.toString();
+    state.prev = null;
+    state.op = null;
+    state.reset = true;
+}
+
+function calcClear(windowId) {
+    const display = document.getElementById(`calc-display-${windowId}`);
+    const state = windows[windowId].calcState;
+    state.current = '';
+    state.prev = null;
+    state.op = null;
+    display.textContent = '0';
 }

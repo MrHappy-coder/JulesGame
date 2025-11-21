@@ -19,6 +19,11 @@
             <div class="icon-text">Recycle Bin</div>
         </div>
 
+        <div class="icon" id="icon-notepad" ondblclick="openWindow('Notepad', 'notepad')">
+            <div class="icon-img notepad-icon"></div>
+            <div class="icon-text">Notepad</div>
+        </div>
+
         <!-- Windows will be appended here -->
     </div>
 
@@ -40,7 +45,9 @@
             <span class="start-text">Windows</span><span class="start-text-95">95</span>
         </div>
         <ul class="start-menu-items">
-            <li onclick="openWindow('Programs')">Programs</li>
+            <li onclick="openWindow('Programs', 'programs')">Programs</li>
+            <li onclick="openWindow('Notepad', 'notepad')">Notepad</li>
+            <li onclick="openWindow('Calculator', 'calculator')">Calculator</li>
             <li onclick="openWindow('Documents')">Documents</li>
             <li onclick="openWindow('Settings')">Settings</li>
             <li onclick="openWindow('Find')">Find</li>

@@ -4,10 +4,13 @@ A simplistic clone of the Windows 95 operating system interface built with HTML,
 
 ## Features
 
--   **Desktop**: Iconic teal background with "My Computer" and "Recycle Bin" icons.
+-   **Desktop**: Iconic teal background with "My Computer", "Recycle Bin", and "Notepad" icons.
 -   **Window Management**: Draggable windows that can be minimized and restored.
 -   **Taskbar**: Functional Start button, clock, and window switcher.
--   **Start Menu**: Toggleable menu with submenu items (visual only).
+-   **Start Menu**: Functional menu launching apps like Calculator and Notepad.
+-   **Apps**:
+    -   **Notepad**: A simple text editor.
+    -   **Calculator**: A functional arithmetic calculator.
 
 ## How to Run
 
