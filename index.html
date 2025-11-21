@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 95 Clone</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="desktop">
+        <!-- Desktop Icons will go here -->
+        <div class="icon" id="icon-my-computer" ondblclick="openWindow('My Computer')">
+            <div class="icon-img my-computer-icon"></div>
+            <div class="icon-text">My Computer</div>
+        </div>
+
+        <div class="icon" id="icon-recycle-bin" ondblclick="openWindow('Recycle Bin')">
+            <div class="icon-img recycle-bin-icon"></div>
+            <div class="icon-text">Recycle Bin</div>
+        </div>
+
+        <!-- Windows will be appended here -->
+    </div>
+
+    <div id="taskbar">
+        <button id="start-button" onclick="toggleStartMenu()">
+            <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" alt="logo" class="start-icon">
+            Start
+        </button>
+        <div id="taskbar-items">
+            <!-- Open windows will appear here -->
+        </div>
+        <div id="tray">
+            <span id="clock">12:00 PM</span>
+        </div>
+    </div>
+
+    <div id="start-menu" class="hidden">
+        <div class="start-menu-sidebar">
+            <span class="start-text">Windows</span><span class="start-text-95">95</span>
+        </div>
+        <ul class="start-menu-items">
+            <li onclick="openWindow('Programs')">Programs</li>
+            <li onclick="openWindow('Documents')">Documents</li>
+            <li onclick="openWindow('Settings')">Settings</li>
+            <li onclick="openWindow('Find')">Find</li>
+            <li onclick="openWindow('Help')">Help</li>
+            <li onclick="openWindow('Run...')">Run...</li>
+            <hr>
+            <li onclick="alert('Shutting down...')">Shut Down...</li>
+        </ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
