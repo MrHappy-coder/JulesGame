@@ -54,6 +54,9 @@ function openWindow(title, appType = 'default') {
     } else if (appType === 'calculator') {
         win.style.width = '200px';
         win.style.minHeight = 'auto'; // allow it to shrink
+    } else if (appType === 'browser') {
+        win.style.width = '600px';
+        win.style.height = '450px';
     }
 
     const titleBar = document.createElement('div');
@@ -116,6 +119,20 @@ function openWindow(title, appType = 'default') {
             </div>
         `;
         content.style.overflow = 'hidden';
+    } else if (appType === 'browser') {
+        content.style.padding = '0';
+        content.style.display = 'flex';
+        content.style.flexDirection = 'column';
+        content.innerHTML = `
+            <div class="browser-toolbar">
+                <button onclick="browserBack('${windowId}')">Back</button>
+                <button onclick="browserForward('${windowId}')">Forward</button>
+                <button onclick="browserReload('${windowId}')">Reload</button>
+                <input type="text" id="browser-address-${windowId}" class="browser-address" value="about:blank" onkeydown="if(event.key === 'Enter') browserNavigate('${windowId}')">
+                <button onclick="browserNavigate('${windowId}')">Go</button>
+            </div>
+            <iframe id="browser-frame-${windowId}" class="browser-frame" src="data:text/html,<h1>Google Chrome</h1><p>Welcome to the browser.</p>"></iframe>
+        `;
     } else if (appType === 'programs') {
         content.innerHTML = `
             <div class="icon" ondblclick="openWindow('Notepad', 'notepad')">
@@ -125,6 +142,10 @@ function openWindow(title, appType = 'default') {
             <div class="icon" ondblclick="openWindow('Calculator', 'calculator')">
                 <div class="icon-img calc-icon"></div>
                 <div class="icon-text" style="color:black; text-shadow:none;">Calculator</div>
+            </div>
+            <div class="icon" ondblclick="openWindow('Google Chrome', 'browser')">
+                <div class="icon-img browser-icon"></div>
+                <div class="icon-text" style="color:black; text-shadow:none;">Chrome</div>
             </div>
         `;
         content.style.display = 'flex';
@@ -314,4 +335,33 @@ function calcClear(windowId) {
     state.prev = null;
     state.op = null;
     display.textContent = '0';
+}
+
+// Browser Logic
+function browserNavigate(windowId) {
+    const addressInput = document.getElementById(`browser-address-${windowId}`);
+    const frame = document.getElementById(`browser-frame-${windowId}`);
+    let url = addressInput.value;
+
+    if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('data:') && !url.startsWith('about:')) {
+        url = 'http://' + url;
+    }
+
+    frame.src = url;
+    addressInput.value = url;
+}
+
+function browserReload(windowId) {
+    const frame = document.getElementById(`browser-frame-${windowId}`);
+    frame.src = frame.src;
+}
+
+function browserBack(windowId) {
+    const frame = document.getElementById(`browser-frame-${windowId}`);
+    frame.contentWindow.history.back();
+}
+
+function browserForward(windowId) {
+    const frame = document.getElementById(`browser-frame-${windowId}`);
+    frame.contentWindow.history.forward();
 }
