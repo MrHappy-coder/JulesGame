@@ -11,7 +11,7 @@ A simplistic clone of the Windows 95 operating system interface built with HTML,
 -   **Apps**:
     -   **Notepad**: A simple text editor.
     -   **Calculator**: A functional arithmetic calculator.
-    -   **Google Chrome**: A simulated web browser with address bar and navigation controls.
+    -   **Google Chrome**: A simulated web browser with a "Start Page" portal and working Google Search integration.
 
 ## How to Run
 

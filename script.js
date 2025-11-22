@@ -123,15 +123,40 @@ function openWindow(title, appType = 'default') {
         content.style.padding = '0';
         content.style.display = 'flex';
         content.style.flexDirection = 'column';
+        const homePageHTML = `
+            data:text/html,
+            <html>
+            <head>
+                <style>
+                    body { font-family: 'Segoe UI', sans-serif; background-color: white; padding: 20px; text-align: center; }
+                    h1 { color: #4285f4; }
+                    .links { display: flex; flex-direction: column; align-items: center; margin-top: 20px; }
+                    a { display: block; margin: 10px; font-size: 16px; color: blue; text-decoration: none; }
+                    a:hover { text-decoration: underline; }
+                </style>
+            </head>
+            <body>
+                <h1>Start Page</h1>
+                <p>Welcome to the simulated internet.</p>
+                <div class="links">
+                    <a href="https://www.google.com/webhp?igu=1">Google Search</a>
+                    <a href="https://www.wikipedia.org/">Wikipedia</a>
+                    <a href="https://web.archive.org/">Internet Archive</a>
+                    <a href="https://example.com/">Example Domain</a>
+                    <a href="https://win98icons.alexmeub.com/">Windows 98 Icons</a>
+                </div>
+            </body>
+            </html>
+        `;
         content.innerHTML = `
             <div class="browser-toolbar">
                 <button onclick="browserBack('${windowId}')">Back</button>
                 <button onclick="browserForward('${windowId}')">Forward</button>
                 <button onclick="browserReload('${windowId}')">Reload</button>
-                <input type="text" id="browser-address-${windowId}" class="browser-address" value="about:blank" onkeydown="if(event.key === 'Enter') browserNavigate('${windowId}')">
+                <input type="text" id="browser-address-${windowId}" class="browser-address" value="Home" onkeydown="if(event.key === 'Enter') browserNavigate('${windowId}')">
                 <button onclick="browserNavigate('${windowId}')">Go</button>
             </div>
-            <iframe id="browser-frame-${windowId}" class="browser-frame" src="data:text/html,<h1>Google Chrome</h1><p>Welcome to the browser.</p>"></iframe>
+            <iframe id="browser-frame-${windowId}" class="browser-frame" src="${homePageHTML.replace(/"/g, '&quot;')}"></iframe>
         `;
     } else if (appType === 'programs') {
         content.innerHTML = `
@@ -344,7 +369,11 @@ function browserNavigate(windowId) {
     let url = addressInput.value;
 
     if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('data:') && !url.startsWith('about:')) {
-        url = 'http://' + url;
+        if (url.includes('.') && !url.includes(' ')) {
+            url = 'http://' + url;
+        } else {
+            url = 'https://www.google.com/search?igu=1&q=' + encodeURIComponent(url);
+        }
     }
 
     frame.src = url;
