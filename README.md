@@ -4,14 +4,16 @@ A simplistic clone of the Windows 95 operating system interface built with HTML,
 
 ## Features
 
--   **Desktop**: Iconic teal background with "My Computer", "Recycle Bin", "Notepad", and "Google Chrome" icons.
+-   **Desktop**: Iconic teal background with "My Computer", "Recycle Bin", "Notepad", "Google Chrome", "MS-DOS Prompt", and "Paint" icons.
 -   **Window Management**: Draggable windows that can be minimized and restored.
 -   **Taskbar**: Functional Start button, clock, and window switcher.
--   **Start Menu**: Functional menu launching apps like Calculator and Notepad.
+-   **Start Menu**: Functional menu launching apps.
 -   **Apps**:
-    -   **Notepad**: A simple text editor.
+    -   **Notepad**: A simple text editor with simulated Save/Load functionality (using LocalStorage).
     -   **Calculator**: A functional arithmetic calculator.
     -   **Google Chrome**: A simulated web browser with a "Start Page" portal and working Google Search integration.
+    -   **MS-DOS Prompt**: A simulated command-line interface supporting commands like `dir`, `ver`, `cls`, `echo`, and `help`.
+    -   **Paint**: A basic drawing application with a color palette and canvas.
 
 ## How to Run
 

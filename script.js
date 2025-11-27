@@ -57,6 +57,13 @@ function openWindow(title, appType = 'default') {
     } else if (appType === 'browser') {
         win.style.width = '600px';
         win.style.height = '450px';
+    } else if (appType === 'msdos') {
+        win.style.width = '500px';
+        win.style.height = '350px';
+        win.style.backgroundColor = 'black';
+    } else if (appType === 'paint') {
+        win.style.width = '500px';
+        win.style.height = '400px';
     }
 
     const titleBar = document.createElement('div');
@@ -85,7 +92,11 @@ function openWindow(title, appType = 'default') {
     // Content Generation based on App Type
     if (appType === 'notepad') {
         content.innerHTML = `
-            <textarea class="notepad-area"></textarea>
+            <div class="notepad-toolbar">
+                <button onclick="notepadSave('${windowId}')">Save</button>
+                <button onclick="notepadLoad('${windowId}')">Load</button>
+            </div>
+            <textarea class="notepad-area" id="notepad-area-${windowId}"></textarea>
         `;
         content.style.padding = '0';
         content.style.height = '100%';
@@ -158,6 +169,42 @@ function openWindow(title, appType = 'default') {
             </div>
             <iframe id="browser-frame-${windowId}" class="browser-frame" src="${homePageHTML.replace(/"/g, '&quot;')}"></iframe>
         `;
+    } else if (appType === 'msdos') {
+        content.innerHTML = `
+            <div class="msdos-container" onclick="document.getElementById('msdos-input-${windowId}').focus()">
+                <div id="msdos-output-${windowId}" class="msdos-output">Microsoft(R) Windows 95<br>(C)Copyright Microsoft Corp 1981-1996.<br><br>C:\\WINDOWS></div>
+                <div class="msdos-input-line">
+                    <input type="text" id="msdos-input-${windowId}" class="msdos-input" onkeydown="if(event.key === 'Enter') msdosCommand('${windowId}', this.value)">
+                </div>
+            </div>
+        `;
+        content.style.padding = '0';
+        content.style.backgroundColor = 'black';
+        content.style.color = 'white';
+        content.style.height = '100%';
+        setTimeout(() => document.getElementById(`msdos-input-${windowId}`).focus(), 0);
+    } else if (appType === 'paint') {
+        content.innerHTML = `
+            <div class="paint-toolbar">
+                <div class="paint-colors">
+                    <div class="color-box" style="background: black" onclick="paintSetColor('${windowId}', 'black')"></div>
+                    <div class="color-box" style="background: white" onclick="paintSetColor('${windowId}', 'white')"></div>
+                    <div class="color-box" style="background: red" onclick="paintSetColor('${windowId}', 'red')"></div>
+                    <div class="color-box" style="background: green" onclick="paintSetColor('${windowId}', 'green')"></div>
+                    <div class="color-box" style="background: blue" onclick="paintSetColor('${windowId}', 'blue')"></div>
+                    <div class="color-box" style="background: yellow" onclick="paintSetColor('${windowId}', 'yellow')"></div>
+                </div>
+                <button onclick="paintClear('${windowId}')">Clear</button>
+            </div>
+            <canvas id="paint-canvas-${windowId}" class="paint-canvas"></canvas>
+        `;
+        content.style.padding = '0';
+        content.style.display = 'flex';
+        content.style.flexDirection = 'column';
+        content.style.height = '100%';
+
+        // Need to initialize canvas after it's in the DOM, we can use setTimeout
+        setTimeout(() => initPaint(windowId), 0);
     } else if (appType === 'programs') {
         content.innerHTML = `
             <div class="icon" ondblclick="openWindow('Notepad', 'notepad')">
@@ -172,11 +219,20 @@ function openWindow(title, appType = 'default') {
                 <div class="icon-img browser-icon"></div>
                 <div class="icon-text" style="color:black; text-shadow:none;">Chrome</div>
             </div>
+            <div class="icon" ondblclick="openWindow('MS-DOS Prompt', 'msdos')">
+                <div class="icon-img msdos-icon"></div>
+                <div class="icon-text" style="color:black; text-shadow:none;">MS-DOS</div>
+            </div>
+             <div class="icon" ondblclick="openWindow('Paint', 'paint')">
+                <div class="icon-img paint-icon"></div>
+                <div class="icon-text" style="color:black; text-shadow:none;">Paint</div>
+            </div>
         `;
         content.style.display = 'flex';
         content.style.flexDirection = 'row';
         content.style.justifyContent = 'flex-start';
         content.style.alignItems = 'flex-start';
+        content.style.flexWrap = 'wrap';
     } else if (title === 'My Computer') {
          content.innerHTML = `
             <div class="icon" ondblclick="alert('Access Denied')">
@@ -211,7 +267,8 @@ function openWindow(title, appType = 'default') {
     windows[windowId] = {
         element: win,
         taskbarItem: taskbarItem,
-        calcState: { current: '', op: null, prev: null } // for calculator
+        calcState: { current: '', op: null, prev: null }, // for calculator
+        paintState: { color: 'black', isDrawing: false } // for paint
     };
 
     // Drag functionality
@@ -393,4 +450,130 @@ function browserBack(windowId) {
 function browserForward(windowId) {
     const frame = document.getElementById(`browser-frame-${windowId}`);
     frame.contentWindow.history.forward();
+}
+
+// Notepad Logic
+function notepadSave(windowId) {
+    const area = document.getElementById(`notepad-area-${windowId}`);
+    localStorage.setItem('notepad-content', area.value);
+    alert('File Saved to LocalStorage!');
+}
+
+function notepadLoad(windowId) {
+    const area = document.getElementById(`notepad-area-${windowId}`);
+    const content = localStorage.getItem('notepad-content');
+    if (content !== null) {
+        area.value = content;
+    } else {
+        alert('No saved file found.');
+    }
+}
+
+// MS-DOS Logic
+function msdosCommand(windowId, cmd) {
+    const output = document.getElementById(`msdos-output-${windowId}`);
+    const input = document.getElementById(`msdos-input-${windowId}`);
+
+    // Echo command
+    output.innerHTML += `<div>C:\\WINDOWS&gt;${cmd}</div>`;
+
+    const command = cmd.toLowerCase().trim();
+
+    if (command === 'dir') {
+        output.innerHTML += `
+            <div> Volume in drive C is WINDOWS95</div>
+            <div> Volume Serial Number is 1234-5678</div>
+            <div> Directory of C:\\WINDOWS</div>
+            <div><br></div>
+            <div>COMMAND  COM        93,912  07-11-95  9:50a</div>
+            <div>NOTEPAD  EXE        35,328  07-11-95  9:50a</div>
+            <div>WIN      COM        24,258  07-11-95  9:50a</div>
+            <div>SYSTEM       &lt;DIR&gt;        07-11-95  9:50a</div>
+            <div>        4 file(s)        153,498 bytes</div>
+            <div>        1 dir(s)     100,000,000 bytes free</div>
+        `;
+    } else if (command === 'ver') {
+        output.innerHTML += `<div>Windows 95 [Version 4.00.950]</div>`;
+    } else if (command === 'cls') {
+        output.innerHTML = '';
+    } else if (command === 'exit') {
+        closeWindow(windowId);
+        return; // Stop here
+    } else if (command === 'help') {
+        output.innerHTML += `<div>Supported commands: DIR, VER, CLS, EXIT, ECHO, HELP</div>`;
+    } else if (command.startsWith('echo ')) {
+        output.innerHTML += `<div>${cmd.substring(5)}</div>`;
+    } else if (command === '') {
+        // do nothing
+    } else {
+        output.innerHTML += `<div>Bad command or file name</div>`;
+    }
+
+    output.innerHTML += `<div><br>C:\\WINDOWS&gt;</div>`;
+
+    // Scroll to bottom
+    const container = output.parentElement;
+    container.scrollTop = container.scrollHeight;
+
+    input.value = '';
+    input.focus();
+}
+
+// Paint Logic
+function initPaint(windowId) {
+    const canvas = document.getElementById(`paint-canvas-${windowId}`);
+    if (!canvas) return; // Should not happen with setTimeout
+
+    // Set canvas size to match container
+    // We need to do this otherwise resolution is low
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+
+    const ctx = canvas.getContext('2d');
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'black'; // default color
+
+    let isDrawing = false;
+
+    canvas.onmousedown = function(e) {
+        isDrawing = true;
+        ctx.beginPath();
+        const rect = canvas.getBoundingClientRect();
+        ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    };
+
+    canvas.onmousemove = function(e) {
+        if (!isDrawing) return;
+        const rect = canvas.getBoundingClientRect();
+        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+        ctx.stroke();
+    };
+
+    canvas.onmouseup = function() {
+        isDrawing = false;
+    };
+
+    canvas.onmouseleave = function() {
+        isDrawing = false;
+    };
+
+    // Store context reference if needed, but for now direct access is fine
+    windows[windowId].paintCtx = ctx;
+}
+
+function paintSetColor(windowId, color) {
+    const ctx = windows[windowId].paintCtx;
+    if (ctx) {
+        ctx.strokeStyle = color;
+    }
+}
+
+function paintClear(windowId) {
+    const canvas = document.getElementById(`paint-canvas-${windowId}`);
+    const ctx = windows[windowId].paintCtx;
+    if (canvas && ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
 }
