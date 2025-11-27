@@ -1,0 +1,503 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fallback, ideally MS Sans Serif */
+    user-select: none;
+}
+
+/* Desktop */
+#desktop {
+    background-color: #008080;
+    width: 100%;
+    height: calc(100% - 28px); /* Subtract taskbar height */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+    box-sizing: border-box;
+    flex-wrap: wrap; /* Allow icons to wrap */
+}
+
+/* Icons */
+.icon {
+    width: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-right: 10px; /* spacing for wrap */
+    cursor: pointer;
+}
+
+.icon-img {
+    width: 32px;
+    height: 32px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-bottom: 5px;
+}
+
+.my-computer-icon {
+    background-image: url('https://win98icons.alexmeub.com/icons/png/computer_explorer-5.png');
+}
+
+.recycle-bin-icon {
+    background-image: url('https://win98icons.alexmeub.com/icons/png/recycle_bin_empty-4.png');
+}
+
+.notepad-icon {
+    background-image: url('https://win98icons.alexmeub.com/icons/png/notepad-2.png');
+}
+
+.calc-icon {
+    background-image: url('https://win98icons.alexmeub.com/icons/png/calculator-0.png');
+}
+
+.drive-icon {
+    background-image: url('https://win98icons.alexmeub.com/icons/png/hard_disk_drive-3.png');
+}
+
+.control-panel-icon {
+    background-image: url('https://win98icons.alexmeub.com/icons/png/settings_gear-4.png');
+}
+
+.browser-icon {
+    background-image: url('https://win98icons.alexmeub.com/icons/png/msie2-2.png');
+}
+
+.msdos-icon {
+    background-image: url('https://win98icons.alexmeub.com/icons/png/console_prompt-0.png');
+}
+
+.paint-icon {
+    background-image: url('https://win98icons.alexmeub.com/icons/png/paint_file-2.png');
+}
+
+.icon-text {
+    color: white;
+    font-size: 12px;
+    text-align: center;
+    text-shadow: 1px 1px 0px #000000; /* Basic outline effect */
+}
+
+.icon:active .icon-text {
+    background-color: #000080;
+    outline: 1px dotted white;
+}
+
+/* Taskbar */
+#taskbar {
+    height: 28px;
+    background-color: #c0c0c0;
+    border-top: 2px solid #ffffff;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    box-sizing: border-box;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+#start-button {
+    height: 22px;
+    background-color: #c0c0c0;
+    border-top: 1px solid #ffffff;
+    border-left: 1px solid #ffffff;
+    border-right: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+    box-shadow: 1px 1px 0 #808080 inset; /* Inner shadow simulation */
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+    font-weight: bold;
+    font-size: 11px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+#start-button:active, #start-button.active {
+    border-top: 2px solid #000000;
+    border-left: 2px solid #000000;
+    border-right: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+    box-shadow: none;
+    padding-top: 2px; /* Simulate press */
+    padding-left: 7px;
+}
+
+.start-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 3px;
+}
+
+#taskbar-items {
+    flex-grow: 1;
+    display: flex;
+    padding-left: 5px;
+    overflow: hidden;
+}
+
+.taskbar-item {
+    width: 160px;
+    height: 22px;
+    background-color: #c0c0c0;
+    border-top: 2px solid #ffffff;
+    border-left: 2px solid #ffffff;
+    border-right: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+    margin-right: 3px;
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+    font-size: 11px;
+    cursor: default;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.taskbar-item.active {
+    border-top: 2px solid #000000;
+    border-left: 2px solid #000000;
+    border-right: 2px solid #ffffff;
+    border-bottom: 2px solid #ffffff;
+    background-color: #eeeeee; /* Dither pattern ideally */
+    font-weight: bold;
+}
+
+#tray {
+    background-color: #c0c0c0;
+    border-top: 1px solid #808080;
+    border-left: 1px solid #808080;
+    border-right: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+    padding: 2px 5px;
+    margin-right: 2px;
+    font-size: 11px;
+}
+
+/* Start Menu */
+#start-menu {
+    position: fixed;
+    bottom: 28px;
+    left: 2px;
+    width: 180px;
+    background-color: #c0c0c0;
+    border-top: 2px solid #ffffff;
+    border-left: 2px solid #ffffff;
+    border-right: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+    display: flex;
+    z-index: 999;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.start-menu-sidebar {
+    width: 25px;
+    background-color: #000080;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 5px;
+}
+
+.start-text {
+    color: #c0c0c0;
+    font-weight: bold;
+    transform: rotate(-90deg);
+    white-space: nowrap;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+.start-text-95 {
+     color: #ffffff;
+     transform: rotate(-90deg);
+     margin-bottom: 10px;
+     font-size: 16px;
+}
+
+.start-menu-items {
+    list-style: none;
+    padding: 2px;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.start-menu-items li {
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.start-menu-items li:hover {
+    background-color: #000080;
+    color: #ffffff;
+}
+
+/* Windows */
+.window {
+    position: absolute;
+    background-color: #c0c0c0;
+    border-top: 2px solid #ffffff;
+    border-left: 2px solid #ffffff;
+    border-right: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+    padding: 2px;
+    width: 300px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.window-title-bar {
+    background-color: #000080; /* Active title bar */
+    color: white;
+    padding: 2px 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 12px;
+    cursor: default;
+}
+
+.window.inactive .window-title-bar {
+    background-color: #808080; /* Inactive title bar */
+    color: #c0c0c0;
+}
+
+.window-controls button {
+    width: 16px;
+    height: 14px;
+    background-color: #c0c0c0;
+    border-top: 1px solid #ffffff;
+    border-left: 1px solid #ffffff;
+    border-right: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+    font-size: 9px;
+    line-height: 9px;
+    font-weight: bold;
+    padding: 0;
+    margin-left: 2px;
+    cursor: pointer;
+}
+
+.window-controls button:active {
+    border-top: 1px solid #000000;
+    border-left: 1px solid #000000;
+    border-right: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+}
+
+.window-content {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 13px;
+    background-color: white;
+    border: 1px solid #808080; /* Inset effect */
+    margin-top: 2px;
+    overflow: auto;
+}
+
+/* Notepad */
+.notepad-toolbar {
+    display: flex;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #808080;
+    margin-bottom: 2px;
+}
+
+.notepad-toolbar button {
+    font-size: 11px;
+    margin-right: 5px;
+    background-color: #c0c0c0;
+    border: 1px solid #000000;
+    border-top: 1px solid #ffffff;
+    border-left: 1px solid #ffffff;
+    cursor: pointer;
+}
+
+.notepad-area {
+    width: 100%;
+    height: 100%;
+    border: none;
+    resize: none;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+/* Calculator */
+.calc-display {
+    background-color: white;
+    border: 1px solid #808080;
+    text-align: right;
+    padding: 5px;
+    font-family: monospace;
+    font-size: 20px;
+    margin-bottom: 10px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.calc-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+}
+
+.calc-buttons button {
+    width: 35px;
+    height: 30px;
+    font-size: 14px;
+    background-color: #c0c0c0;
+    border-top: 1px solid #ffffff;
+    border-left: 1px solid #ffffff;
+    border-right: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+    cursor: pointer;
+}
+
+.calc-buttons button:active {
+    border-top: 1px solid #000000;
+    border-left: 1px solid #000000;
+    border-right: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+    background-color: #d0d0d0;
+}
+
+/* Browser */
+.browser-toolbar {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    background-color: #c0c0c0;
+    border-bottom: 1px solid #808080;
+}
+
+.browser-toolbar button {
+    margin-right: 5px;
+    padding: 2px 5px;
+    font-size: 11px;
+    background-color: #c0c0c0;
+    border-top: 1px solid #ffffff;
+    border-left: 1px solid #ffffff;
+    border-right: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+    cursor: pointer;
+}
+
+.browser-toolbar button:active {
+    border-top: 1px solid #000000;
+    border-left: 1px solid #000000;
+    border-right: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+}
+
+.browser-address {
+    flex-grow: 1;
+    margin-right: 5px;
+    padding: 2px;
+    font-size: 12px;
+    border: 1px solid #808080;
+    border-bottom-color: #ffffff; /* Inset look */
+    border-right-color: #ffffff;
+    border-top-color: #000000;
+    border-left-color: #000000;
+}
+
+.browser-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    flex-grow: 1;
+    background-color: white;
+}
+
+/* MS-DOS */
+.msdos-container {
+    background-color: black;
+    color: #c0c0c0;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    padding: 5px;
+    height: 100%;
+    overflow-y: auto;
+    cursor: text;
+    box-sizing: border-box;
+}
+
+.msdos-output {
+    white-space: pre-wrap;
+}
+
+.msdos-output div {
+    min-height: 16px;
+}
+
+.msdos-input-line {
+    display: flex;
+}
+
+.msdos-input {
+    background-color: transparent;
+    color: #c0c0c0;
+    border: none;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    outline: none;
+    flex-grow: 1;
+    width: 100%;
+}
+
+/* Paint */
+.paint-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #c0c0c0;
+    padding: 5px;
+    border-bottom: 1px solid #808080;
+}
+
+.paint-colors {
+    display: flex;
+    gap: 3px;
+}
+
+.color-box {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #808080;
+    border-right-color: #ffffff;
+    border-bottom-color: #ffffff;
+    cursor: pointer;
+}
+
+.color-box:active {
+    border: 2px solid #808080;
+    border-left-color: #000000;
+    border-top-color: #000000;
+}
+
+.paint-canvas {
+    background-color: white;
+    cursor: crosshair;
+    flex-grow: 1;
+}
